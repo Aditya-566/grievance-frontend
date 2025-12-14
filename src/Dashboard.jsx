@@ -440,7 +440,8 @@ async function changeStatus(id, newStatus) {
                         {g.files.map((file, idx) => (
                           <a
                             key={idx}
-                            href={file.path}
+                            href={`${API}${file.path}`}
+
                             target="_blank"
                             rel="noopener noreferrer"
                             className="file-link"
