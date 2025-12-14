@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+const API = import.meta.env.VITE_API_URL
+
 
 function formatFileSize(bytes){
   if(!bytes) return '0 B'
@@ -586,7 +588,7 @@ function TrackingResultCard({ grievance }){
             {grievance.files.map((file, idx) => (
               <a
                 key={idx}
-                href={file.path}
+                href={`${import.meta.env.VITE_API_URL}${file.path}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="file-link"
