@@ -2332,3 +2332,62 @@ body{ font-family: Arial, sans-serif; padding:20px; background:var(--bg); color:
 .dashboard-panel .panel-title{ font-size:1.25rem }
 .grievance-card .grievance-description{ color: #374151 }
 .grievance-card .grievance-title{ color: #111827 }
+
+/* Google Sign-In Styles */
+.google-signin-section {
+  margin-top: 20px;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.divider span {
+  background: var(--background);
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.google-signin-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  background: white;
+  color: #3c4043;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-signin-btn:hover {
+  background: #f8f9fa;
+  border-color: rgba(148, 163, 184, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.google-signin-btn svg {
+  width: 18px;
+  height: 18px;
+}
