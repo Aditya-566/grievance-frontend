@@ -438,20 +438,46 @@ async function changeStatus(id, newStatus) {
                       <p className="files-label">Attachments ({g.files.length}):</p>
                       <div className="files-list">
                         {g.files.map((file, idx) => (
-                          <a
-                            key={idx}
-                            href={`${API}${file.path}`}
-
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="file-link"
-                          >
-                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1 1.89543 1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                            <span>{file.originalName}</span>
-                            <span className="file-size">({formatFileSize(file.size)})</span>
-                          </a>
+                          file.mimetype.startsWith('image/') ? (
+                            <div key={idx} className="file-image-container">
+                              <img
+                                src={`${API}${file.path}`}
+                                alt={file.originalName}
+                                className="file-image"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'inline';
+                                }}
+                              />
+                              <a
+                                href={`${API}${file.path}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="file-link"
+                                style={{ display: 'none' }}
+                              >
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1 1.89543 1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <span>{file.originalName}</span>
+                                <span className="file-size">({formatFileSize(file.size)})</span>
+                              </a>
+                            </div>
+                          ) : (
+                            <a
+                              key={idx}
+                              href={`${API}${file.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="file-link"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1 1.89543 1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              <span>{file.originalName}</span>
+                              <span className="file-size">({formatFileSize(file.size)})</span>
+                            </a>
+                          )
                         ))}
                       </div>
                     </div>
@@ -587,19 +613,46 @@ function TrackingResultCard({ grievance }){
           <p className="files-label">Attachments ({grievance.files.length}):</p>
           <div className="files-list">
             {grievance.files.map((file, idx) => (
-              <a
-                key={idx}
-                href={`${import.meta.env.VITE_API_URL}${file.path}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="file-link"
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1 1.89543 1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span>{file.originalName}</span>
-                <span className="file-size">({formatFileSize(file.size)})</span>
-              </a>
+              file.mimetype.startsWith('image/') ? (
+                <div key={idx} className="file-image-container">
+                  <img
+                    src={`${import.meta.env.VITE_API_URL}${file.path}`}
+                    alt={file.originalName}
+                    className="file-image"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'inline';
+                    }}
+                  />
+                  <a
+                    href={`${import.meta.env.VITE_API_URL}${file.path}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="file-link"
+                    style={{ display: 'none' }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1 1.89543 1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>{file.originalName}</span>
+                    <span className="file-size">({formatFileSize(file.size)})</span>
+                  </a>
+                </div>
+              ) : (
+                <a
+                  key={idx}
+                  href={`${import.meta.env.VITE_API_URL}${file.path}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="file-link"
+                >
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 7V1M13 1H7M13 1L19 7M19 7V17C19 18.1046 18.1046 19 17 19H3C1.89543 19 1 18.1046 1 17V3C1.89543 1 3 1H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>{file.originalName}</span>
+                  <span className="file-size">({formatFileSize(file.size)})</span>
+                </a>
+              )
             ))}
           </div>
         </div>
