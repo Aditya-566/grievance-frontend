@@ -28,14 +28,14 @@ export default function App(){
   }
 
   function fetchList(){
-    axios.get('/api/grievances')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/grievances`)
       .then(res => setGrievances(res.data))
       .catch(console.error)
   }
 
   function submit(e){
     e.preventDefault()
-    axios.post('/api/grievances', { title, description: desc })
+    axios.post(`${import.meta.env.VITE_API_URL}/api/grievances`, { title, description: desc })
       .then(()=> { setTitle(''); setDesc(''); fetchList() })
       .catch(console.error)
   }
