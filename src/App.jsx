@@ -9,7 +9,19 @@ export default function App(){
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
   const [token, setToken] = useState(localStorage.getItem('token') || '')
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || 'null'))
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('user')
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored)
+      } catch (e) {
+        console.error('Error parsing user from localStorage:', e)
+        localStorage.removeItem('user') // Clean up invalid data
+        return null
+      }
+    }
+    return null
+  })
 
   useEffect(()=>{ if(token) axios.defaults.headers.common.Authorization = `Bearer ${token}` }, [token])
   // simple client-side route using History API
