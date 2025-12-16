@@ -62,15 +62,25 @@ export default function Login({ onLoggedIn, initialEmail }) {
       console.error('Login/Register error:', err)
       const status = err?.response?.status
       if (!err.response) {
-        setError('Network error: Unable to connect to server. Please check if the backend is running.')
+        // Network error
+        if (err.code === 'NETWORK_ERROR') {
+          setError('Network error: Cannot connect to server. Please check your internet connection and try again.')
+        } else if (err.code === 'ECONNABORTED') {
+          setError('Request timeout: Server took too long to respond. Please try again.')
+        } else {
+          setError(`Connection failed: ${err.message || 'Unknown network error'}. Please check if the server is running.`)
+        }
+      } else if (status === 403 && err.response?.data?.error === 'CORS policy violation') {
+        setError('CORS error: This domain is not allowed to access the server. Please contact support.')
       } else if (isSignUp) {
         if (status === 409) setError('This email is already registered. Please sign in instead.')
         else if (status === 400) setError(err.response?.data?.error || 'Invalid input. Please check your details.')
+        else if (status === 500) setError('Server error: Something went wrong on our end. Please try again later.')
         else setError(err.response?.data?.error || 'Registration failed. Please try again.')
       } else {
         if (status === 401) setError('Invalid email or password')
         else if (status === 400) setError(err.response?.data?.error || 'Email and password are required')
-        else if (status === 500) setError('Server error. Please try again later.')
+        else if (status === 500) setError('Server error: Something went wrong on our end. Please try again later.')
         else setError(err.response?.data?.error || 'Login failed. Please check your credentials.')
       }
     } finally { setLoading(false) }
