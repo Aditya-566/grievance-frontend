@@ -59,7 +59,11 @@ export default function App(){
   }
 
   // Determine if the navbar should be visible
-  const showNavbar = location.pathname === '/' || location.pathname === '/dashboard';
+  // const showNavbar = location.pathname === '/' || location.pathname === '/dashboard';
+  // const showNavbar = ['/', '/login'].includes(location.pathname);
+  const showNavbar = ['/', '/login', '/about', '/contact'].includes(location.pathname);
+
+
 
   return (
     <>
