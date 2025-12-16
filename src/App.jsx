@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom'
 import axios from 'axios'
+import Navbar from './Navbar'
 import Dashboard from './Dashboard'
 import Login from './Login'
 import About from './About'
 import Contact from './Contact'
-import Navbar from './Navbar'
+
 import LandingPage from './LandingPage' // We'll create this component
 
 export default function App(){
