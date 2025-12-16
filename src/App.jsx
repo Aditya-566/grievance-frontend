@@ -3,6 +3,8 @@ import axios from 'axios'
 import Dashboard from './Dashboard'
 import Login from './Login'
 import About from './About'
+import Contact from './Contact'
+import Navbar from './Navbar'
 
 export default function App(){
   const [grievances, setGrievances] = useState([])
@@ -103,81 +105,100 @@ export default function App(){
   // if user is not authenticated, show the login route or landing
     if(!token){
     if(route === '/about'){
-      return <About onBack={() => navigate('/')} />
+      return (
+        <>
+          <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+          <About onBack={() => navigate('/')} />
+        </>
+      )
+    }
+    if(route === '/contact'){
+      return (
+        <>
+          <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+          <Contact onBack={() => navigate('/')} />
+        </>
+      )
     }
     if(route !== '/login'){
       // richer landing / hero with topic details and CTA
       return (
-        <div className="landing-page">
-          <div className="hero-background">
-            <div className="gradient-orb orb-1"></div>
-            <div className="gradient-orb orb-2"></div>
-            <div className="gradient-orb orb-3"></div>
-          </div>
-          <div className="container hero">
-            <div className="hero-inner">
-              <div className="hero-content">
-                <div className="hero-badge">✨ Modern Grievance Management</div>
-                <h1 className="hero-title">
-                  <span className="title-gradient">Grievance Tracker</span>
-                  <br />
-                  Clear, Fast, Transparent
-                </h1>
-                <p className="hero-subtitle">
-                  Submit issues, track progress, and resolve concerns with a simple workflow designed for teams and institutions.
-                </p>
+        <>
+          <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+          <div className="landing-page">
+            <div className="hero-background">
+              <div className="gradient-orb orb-1"></div>
+              <div className="gradient-orb orb-2"></div>
+              <div className="gradient-orb orb-3"></div>
+            </div>
+            <div className="container hero">
+              <div className="hero-inner">
+                <div className="hero-content">
+                  <div className="hero-badge">✨ Modern Grievance Management</div>
+                  <h1 className="hero-title">
+                    <span className="title-gradient">Grievance Tracker</span>
+                    <br />
+                    Clear, Fast, Transparent
+                  </h1>
+                  <p className="hero-subtitle">
+                    Submit issues, track progress, and resolve concerns with a simple workflow designed for teams and institutions.
+                  </p>
 
-                <div className="topics">
-                  <div className="topic-card" data-tilt>
-                    <div className="topic-icon">📝</div>
-                    <strong>Easy Submission</strong>
-                    <div className="muted-small">Create grievances quickly with title and description.</div>
+                  <div className="topics">
+                    <div className="topic-card" data-tilt>
+                      <div className="topic-icon">📝</div>
+                      <strong>Easy Submission</strong>
+                      <div className="muted-small">Create grievances quickly with title and description.</div>
+                    </div>
+                    <div className="topic-card" data-tilt>
+                      <div className="topic-icon">📊</div>
+                      <strong>Status Tracking</strong>
+                      <div className="muted-small">Open, Resolved, or Rejected — stay informed with real-time updates.</div>
+                    </div>
+                    <div className="topic-card" data-tilt>
+                      <div className="topic-icon">⚙️</div>
+                      <strong>Admin Actions</strong>
+                      <div className="muted-small">Admins can resolve, reject, or re-open items with audit-friendly actions.</div>
+                    </div>
+                    <div className="topic-card" data-tilt>
+                      <div className="topic-icon">📈</div>
+                      <strong>Analytics</strong>
+                      <div className="muted-small">Dashboard stats and filters help you prioritize work.</div>
+                    </div>
                   </div>
-                  <div className="topic-card" data-tilt>
-                    <div className="topic-icon">📊</div>
-                    <strong>Status Tracking</strong>
-                    <div className="muted-small">Open, Resolved, or Rejected — stay informed with real-time updates.</div>
-                  </div>
-                  <div className="topic-card" data-tilt>
-                    <div className="topic-icon">⚙️</div>
-                    <strong>Admin Actions</strong>
-                    <div className="muted-small">Admins can resolve, reject, or re-open items with audit-friendly actions.</div>
-                  </div>
-                  <div className="topic-card" data-tilt>
-                    <div className="topic-icon">📈</div>
-                    <strong>Analytics</strong>
-                    <div className="muted-small">Dashboard stats and filters help you prioritize work.</div>
-                  </div>
-                </div>
 
-                <div className="cta-section">
-                  <button className="cta-btn" onClick={quickSignIn}>
-                    <span>Sign in — Get started</span>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <button className="cta-btn-secondary" onClick={() => navigate('/about')}>
-                    <span>Learn More</span>
-                  </button>
+                  <div className="cta-section">
+                    <button className="cta-btn" onClick={quickSignIn}>
+                      <span>Sign in — Get started</span>
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <button className="cta-btn-secondary" onClick={() => navigate('/about')}>
+                      <span>Learn More</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )
     }
 
     return (
-      <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
-        const { token, user } = data
-        setToken(token)
-        setUser(user)
-        localStorage.setItem('token', token)
-        localStorage.setItem('user', JSON.stringify(user))
-        axios.defaults.headers.common.Authorization = `Bearer ${token}`
-        navigate('/dashboard')
-      }} />
+      <>
+        <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+        <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
+          const { token, user } = data
+          setToken(token)
+          setUser(user)
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', JSON.stringify(user))
+          axios.defaults.headers.common.Authorization = `Bearer ${token}`
+          navigate('/dashboard')
+        }} />
+      </>
     )
   }
 
@@ -191,6 +212,9 @@ export default function App(){
   }
 
   return (
-    <Dashboard user={user} onLogout={logout} />
+    <>
+      <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+      <Dashboard user={user} onLogout={logout} />
+    </>
   )
 }
