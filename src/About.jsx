@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-export default function About({ onBack }) {
+export default function About() {
   const features = [
     {
       icon: '🔐',
@@ -63,12 +64,12 @@ export default function About({ onBack }) {
       </div>
       
       <div className="about-container">
-        <button onClick={onBack} className="back-btn">
+        <Link to="/" className="back-btn">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           Back to Home
-        </button>
+        </Link>
 
         <div className="about-header">
           <h1 className="about-title">About Grievance Tracker</h1>
@@ -153,4 +154,3 @@ export default function About({ onBack }) {
     </div>
   )
 }
-

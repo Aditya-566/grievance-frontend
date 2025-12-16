@@ -23,38 +23,31 @@ export default function Dashboard({ user, onLogout }){
   const [trackingResult, setTrackingResult] = useState(null)
   const [trackingError, setTrackingError] = useState('')
   const [trackingLoading, setTrackingLoading] = useState(false)
+  const [listLoading, setListLoading] = useState(true)
   const { theme, toggleTheme } = useTheme()
 
   useEffect(()=>{ fetchList(undefined, 1); fetchStats() }, [])
 
   function fetchList(status, page = 1){
+    setListLoading(true)
     const params = { limit: 20, page }
     if(status) params.status = status
     axios.get(
-  `${import.meta.env.VITE_API_URL}/api/grievances?limit=20&page=1`,
-  {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-  }
-)
+      `${import.meta.env.VITE_API_URL}/api/grievances`, { params }
+    )
       .then(res => {
         // backend returns { list, total, page, limit }
         const data = res.data && res.data.list ? res.data.list : res.data
         setGrievances(data)
       })
       .catch(console.error)
+      .finally(() => setListLoading(false))
   }
 
   function fetchStats(){
     axios.get(
-  `${import.meta.env.VITE_API_URL}/api/grievances/stats`,
-  {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-  }
-)
+      `${import.meta.env.VITE_API_URL}/api/grievances/stats`
+    )
       .then(res => setStats(res.data))
       .catch(console.error)
   }
@@ -78,13 +71,6 @@ export default function Dashboard({ user, onLogout }){
   if (!title || !desc) return
   setLoading(true)
 
-  const token = localStorage.getItem("token")
-  if (!token) {
-    alert("You are not authenticated. Please login again.")
-    setLoading(false)
-    return
-  }
-
   const formData = new FormData()
   formData.append("title", title)
   formData.append("description", desc)
@@ -97,10 +83,8 @@ export default function Dashboard({ user, onLogout }){
     `${import.meta.env.VITE_API_URL}/api/grievances`,
     formData,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data"
-      },
+      // Axios will set Content-Type to multipart/form-data automatically
+      // The global auth header is already set
       onUploadProgress: (progressEvent) => {
         const percentCompleted = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
@@ -146,21 +130,10 @@ async function changeStatus(id, newStatus) {
   )
   if (!ok) return
 
-  const token = localStorage.getItem("token")
-  if (!token) {
-    alert("You are not authenticated. Please login again.")
-    return
-  }
-
   try {
     await axios.patch(
       `${import.meta.env.VITE_API_URL}/api/grievances/${id}/status`,
-      { status: newStatus },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { status: newStatus }
     )
 
     // refresh UI
@@ -412,7 +385,9 @@ async function changeStatus(id, newStatus) {
               <span className="grievance-count">{grievances.length}</span>
             )}
           </div>
-          {grievances.length === 0 ? (
+          {listLoading ? (
+            <SkeletonList />
+          ) : grievances.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">📭</div>
               <p className="empty-text">No grievances yet — be the first to create one.</p>
@@ -694,6 +669,24 @@ function StatusTimeline({ status }){
         </div>
       </div>
     </div>
+  )
+}
+
+function SkeletonList() {
+  return (
+    <ul className="grievances-list">
+      {[...Array(3)].map((_, i) => (
+        <li className="grievance-card skeleton-card" key={i}>
+          <div className="grievance-header">
+            <div className="skeleton skeleton-title"></div>
+            <div className="skeleton skeleton-badge"></div>
+          </div>
+          <div className="skeleton skeleton-id"></div>
+          <div className="skeleton skeleton-text"></div>
+          <div className="skeleton skeleton-text skeleton-text-short"></div>
+        </li>
+      ))}
+    </ul>
   )
 }
 

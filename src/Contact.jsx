@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTheme } from './ThemeContext';
-import './styles/Contact.css';
+import { Link } from 'react-router-dom';
 
 const contactInfoItems = [
   {
@@ -29,7 +29,7 @@ const INITIAL_FORM_STATE = {
 
 const SUCCESS_MESSAGE_TIMEOUT = 3000;
 
-export default function Contact({ onBack }) {
+export default function Contact() {
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
@@ -85,9 +85,9 @@ export default function Contact({ onBack }) {
       <div className="contact-container">
         <div className="contact-header">
           <div className="header-top">
-            <button className="back-btn" onClick={onBack}>
+            <Link to="/" className="back-btn">
               ← Back to Home
-            </button>
+            </Link>
             <button
               className="theme-toggle-btn"
               onClick={toggleTheme}

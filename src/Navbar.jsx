@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useTheme } from './ThemeContext'
 
-export default function Navbar({ user, onLogout, onNavigate }) {
+export default function Navbar({ user, onLogout }) {
   const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   const handleLogout = () => {
     onLogout()
-    onNavigate('/')
+    setMobileMenuOpen(false)
+    navigate('/')
   }
 
   return (
     <nav className="navbar">
-      <div className="navbar-container">
+      <div className="navbar-container" onClick={() => isMobileMenuOpen && setMobileMenuOpen(false)}>
         <div className="navbar-brand">
           <h2 className="brand-text">Grievance Tracker</h2>
         </div>
@@ -24,27 +29,27 @@ export default function Navbar({ user, onLogout, onNavigate }) {
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
 
-          <button className="nav-link" onClick={() => onNavigate('/')}>
+          <NavLink to="/" className="nav-link">
             <span className="nav-icon">🏠</span>
             Home
-          </button>
+          </NavLink>
 
-          <button className="nav-link" onClick={() => onNavigate('/about')}>
+          <NavLink to="/about" className="nav-link">
             <span className="nav-icon">ℹ️</span>
             About
-          </button>
+          </NavLink>
 
-          <button className="nav-link" onClick={() => onNavigate('/contact')}>
+          <NavLink to="/contact" className="nav-link">
             <span className="nav-icon">📞</span>
             Contact
-          </button>
+          </NavLink>
 
           {user ? (
             <>
-              <button className="nav-link" onClick={() => onNavigate('/dashboard')}>
+              <NavLink to="/dashboard" className="nav-link">
                 <span className="nav-icon">📊</span>
                 Dashboard
-              </button>
+              </NavLink>
 
               <div className="user-menu">
                 <span className="user-greeting">
@@ -58,14 +63,14 @@ export default function Navbar({ user, onLogout, onNavigate }) {
               </div>
             </>
           ) : (
-            <button className="nav-link login-btn" onClick={() => onNavigate('/login')}>
+            <NavLink to="/login" className="nav-link login-btn">
               <span className="nav-icon">🔐</span>
               Login
-            </button>
+            </NavLink>
           )}
         </div>
 
-        <div className="navbar-mobile-toggle">
+        <div className="navbar-mobile-toggle" onClick={(e) => { e.stopPropagation(); setMobileMenuOpen(!isMobileMenuOpen); }}>
           <span className="hamburger">☰</span>
         </div>
       </div>
