@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useTheme } from './ThemeContext';
 import { Link } from 'react-router-dom';
 
+import "./styles.css";
+
 const contactInfoItems = [
   {
     icon: '📧',
@@ -86,7 +88,7 @@ export default function Contact() {
         <div className="contact-header">
           <div className="header-top">
             <Link to="/" className="back-btn">
-              ← Back to Home
+             
             </Link>
             <button
               className="theme-toggle-btn"
@@ -100,7 +102,7 @@ export default function Contact() {
             <span className="title-highlight">Contact Us</span>
           </h1>
           <p className="contact-subtitle">
-            Have questions or need support? We'd love to hear from you.
+
           </p>
         </div>
 
