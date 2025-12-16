@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from './context/ThemeContext'
+import { useTheme } from './ThemeContext'
 
 export default function Navbar({ user, onLogout, onNavigate }) {
   const { theme, toggleTheme } = useTheme()

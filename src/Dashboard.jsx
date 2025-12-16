@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 const API = import.meta.env.VITE_API_URL
-import { useTheme } from './context/ThemeContext'
+import { useTheme } from './ThemeContext'
 
 
 function formatFileSize(bytes){
