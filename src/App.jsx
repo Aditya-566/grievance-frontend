@@ -103,7 +103,7 @@ export default function App(){
   }
 
   // if user is not authenticated, show the login route or landing
-    if(!token){
+  if(!token){
     if(route === '/about'){
       return (
         <About onBack={() => navigate('/')} />
@@ -198,44 +198,17 @@ export default function App(){
     navigate('/login')
   }
   // Authenticated routes
-  if (user) {
+  if (user) { // or if(token)
     return (
       <>
-        {route === '/' && <Navbar user={user} onLogout={logout} onNavigate={navigate} />}
+        {(route === '/' || route === '/dashboard') && <Navbar user={user} onLogout={logout} onNavigate={navigate} />}
         {route === '/dashboard' && <Dashboard user={user} onLogout={logout} />}
         {route === '/about' && <About />}
         {route === '/contact' && <Contact />}
-        {route === '/' && <Dashboard user={user} onLogout={logout} />} {/* Default to dashboard */}
-        {route !== '/' && route !== '/dashboard' && route !== '/about' && route !== '/contact' && <Dashboard user={user} onLogout={logout} /> /* Fallback to dashboard */}
+        {route === '/' && <Dashboard user={user} onLogout={logout} />} {/* Default view for logged-in user */}
+        {/* Fallback for any other authenticated route */}
+        {!['/', '/dashboard', '/about', '/contact'].includes(route) && <Dashboard user={user} onLogout={logout} />}
       </>
     )
   }
-
-  // Unauthenticated routes
-  if (route === '/about') {
-    return <About />
-  }
-  if (route === '/contact') {
-    return <Contact />
-  }
-  if (route === '/login') {
-    return (
-      <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
-        const { token, user } = data
-        setToken(token)
-        setUser(user)
-        localStorage.setItem('token', token)
-        localStorage.setItem('user', JSON.stringify(user))
-        axios.defaults.headers.common.Authorization = `Bearer ${token}`
-        navigate('/dashboard')
-      }} />
-    )
-  }
-
-  // Default to home/landing page
-  return (
-    <>
-      {showLanding()}
-    </>
-  )
 }
