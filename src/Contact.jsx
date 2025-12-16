@@ -50,14 +50,14 @@ export default function Contact({ onBack }) {
             <div className="info-card">
               <div className="info-icon">📧</div>
               <h3>Email Support</h3>
-              <p>support@grievancetracker.com</p>
+              <p>adityasharmapc1@gmail.com</p>
               <p>We respond within 24 hours</p>
             </div>
 
             <div className="info-card">
               <div className="info-icon">📞</div>
               <h3>Phone Support</h3>
-              <p>+1 (555) 123-4567</p>
+              <p>+91 9814421501</p>
               <p>Mon-Fri, 9AM-6PM EST</p>
             </div>
 
