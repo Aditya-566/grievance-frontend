@@ -206,15 +206,45 @@ export default function App(){
     // navigate to login page instead of auto-signing in
     navigate('/login')
   }
-  // Authenticated routes: dashboard
-  if(route !== '/dashboard'){
-    navigate('/dashboard')
+  // Authenticated routes
+  if (user) {
+    return (
+      <>
+        <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+        {route === '/dashboard' && <Dashboard user={user} onLogout={logout} />}
+        {route === '/about' && <About />}
+        {route === '/contact' && <Contact />}
+        {route === '/' && <Dashboard user={user} onLogout={logout} />} {/* Default to dashboard */}
+        {route !== '/' && route !== '/dashboard' && route !== '/about' && route !== '/contact' && navigate('/dashboard')}
+      </>
+    )
   }
 
+  // Unauthenticated routes
+  if (route === '/about') {
+    return <About />
+  }
+  if (route === '/contact') {
+    return <Contact />
+  }
+  if (route === '/login') {
+    return (
+      <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
+        const { token, user } = data
+        setToken(token)
+        setUser(user)
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', JSON.stringify(user))
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        navigate('/dashboard')
+      }} />
+    )
+  }
+
+  // Default to home/landing page
   return (
     <>
-      <Navbar user={user} onLogout={logout} onNavigate={navigate} />
-      <Dashboard user={user} onLogout={logout} />
+      {showLanding()}
     </>
   )
 }

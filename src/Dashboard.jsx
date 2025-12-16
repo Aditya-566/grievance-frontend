@@ -46,14 +46,13 @@ export default function Dashboard({ user, onLogout }){
 
   function fetchStats(){
     axios.get(
-  `${import.meta.env.VITE_API_URL}/api/grievances?limit=20&page=1`,
+  `${import.meta.env.VITE_API_URL}/api/grievances/stats`,
   {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     }
   }
 )
-
       .then(res => setStats(res.data))
       .catch(console.error)
   }
