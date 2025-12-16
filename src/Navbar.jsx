@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTheme } from './context/ThemeContext'
 
 export default function Navbar({ user, onLogout, onNavigate }) {
+  const { theme, toggleTheme } = useTheme()
   const handleLogout = () => {
     onLogout()
     onNavigate('/')
@@ -14,6 +16,14 @@ export default function Navbar({ user, onLogout, onNavigate }) {
         </div>
 
         <div className="navbar-menu">
+          <button
+            className="theme-toggle-btn nav-theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+
           <button className="nav-link" onClick={() => onNavigate('/')}>
             <span className="nav-icon">🏠</span>
             Home

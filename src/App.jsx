@@ -106,21 +106,16 @@ export default function App(){
     if(!token){
     if(route === '/about'){
       return (
-        <>
-          <Navbar user={user} onLogout={logout} onNavigate={navigate} />
-          <About onBack={() => navigate('/')} />
-        </>
+        <About onBack={() => navigate('/')} />
       )
     }
     if(route === '/contact'){
       return (
-        <>
-          <Navbar user={user} onLogout={logout} onNavigate={navigate} />
-          <Contact onBack={() => navigate('/')} />
-        </>
+        <Contact onBack={() => navigate('/')} />
       )
     }
-    if(route !== '/login'){
+    // This is the unauthenticated home page
+    if(route === '/'){
       // richer landing / hero with topic details and CTA
       return (
         <>
@@ -186,10 +181,7 @@ export default function App(){
       )
     }
 
-    return (
-      <>
-        <Navbar user={user} onLogout={logout} onNavigate={navigate} />
-        <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
+    return <Login initialEmail={localStorage.getItem('rememberEmail') || ''} onLoggedIn={(data)=>{
           const { token, user } = data
           setToken(token)
           setUser(user)
@@ -198,8 +190,7 @@ export default function App(){
           axios.defaults.headers.common.Authorization = `Bearer ${token}`
           navigate('/dashboard')
         }} />
-      </>
-    )
+    
   }
 
   function quickSignIn(){
@@ -210,12 +201,12 @@ export default function App(){
   if (user) {
     return (
       <>
-        <Navbar user={user} onLogout={logout} onNavigate={navigate} />
+        {route === '/' && <Navbar user={user} onLogout={logout} onNavigate={navigate} />}
         {route === '/dashboard' && <Dashboard user={user} onLogout={logout} />}
         {route === '/about' && <About />}
         {route === '/contact' && <Contact />}
         {route === '/' && <Dashboard user={user} onLogout={logout} />} {/* Default to dashboard */}
-        {route !== '/' && route !== '/dashboard' && route !== '/about' && route !== '/contact' && navigate('/dashboard')}
+        {route !== '/' && route !== '/dashboard' && route !== '/about' && route !== '/contact' && <Dashboard user={user} onLogout={logout} /> /* Fallback to dashboard */}
       </>
     )
   }

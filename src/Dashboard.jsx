@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 const API = import.meta.env.VITE_API_URL
+import { useTheme } from './context/ThemeContext'
 
 
 function formatFileSize(bytes){
@@ -22,6 +23,7 @@ export default function Dashboard({ user, onLogout }){
   const [trackingResult, setTrackingResult] = useState(null)
   const [trackingError, setTrackingError] = useState('')
   const [trackingLoading, setTrackingLoading] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(()=>{ fetchList(undefined, 1); fetchStats() }, [])
 
@@ -214,7 +216,7 @@ async function changeStatus(id, newStatus) {
 }
 
   return (
-    <div className="dashboard-wrapper">
+    <div className={`dashboard-wrapper ${theme}-theme`}>
       <div className="container dashboard">
         <header className="dashboard-header">
           <div className="header-content">
@@ -231,12 +233,21 @@ async function changeStatus(id, newStatus) {
               </div>
             </div>
           </div>
-          <button onClick={onLogout} className="logout-btn">
-            <span>Sign out</span>
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 7L17 11M17 11L13 15M17 11H7M7 3H5C3.89543 3 3 3.89543 3 5V15C3 16.1046 3.89543 17 5 17H7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+          <div className="header-actions">
+            <button
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            <button onClick={onLogout} className="logout-btn">
+              <span>Sign out</span>
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 7L17 11M17 11L13 15M17 11H7M7 3H5C3.89543 3 3 3.89543 3 5V15C3 16.1046 3.89543 17 5 17H7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </header>
 
       <section className="stats-row">

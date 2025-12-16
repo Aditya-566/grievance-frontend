@@ -32,6 +32,7 @@ const SUCCESS_MESSAGE_TIMEOUT = 3000;
 export default function Contact({ onBack }) {
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
   const { theme, toggleTheme } = useTheme();
 
   const handleChange = (e) => {
@@ -39,14 +40,41 @@ export default function Contact({ onBack }) {
       ...formData,
       [e.target.name]: e.target.value
     })
+    // Clear error for the field being edited
+    if (errors[e.target.name]) {
+      setErrors(prev => ({ ...prev, [e.target.name]: null }));
+    }
   }
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required.';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required.';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid.';
+    }
+    if (!formData.subject.trim()) newErrors.subject = 'Subject is required.';
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required.';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters long.';
+    }
+    return newErrors;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // In a real app, this would send the data to a backend
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     console.log('Contact form submitted:', formData)
     setSubmitted(true)
     setFormData(INITIAL_FORM_STATE); // Reset form fields
+    setErrors({}); // Clear errors on successful submission
     setTimeout(() => {
       setSubmitted(false);
     }, SUCCESS_MESSAGE_TIMEOUT);
@@ -98,10 +126,12 @@ export default function Contact({ onBack }) {
                   id="name"
                   name="name"
                   value={formData.name}
-                  onChange={handleChange}
-                  required
+                  onChange={handleChange}                  
                   placeholder="Your full name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                 />
+                {errors.name && <span id="name-error" className="error-message">{errors.name}</span>}
               </div>
 
               <div className="form-group">
@@ -111,10 +141,12 @@ export default function Contact({ onBack }) {
                   id="email"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
-                  required
+                  onChange={handleChange}                  
                   placeholder="your.email@example.com"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
+                {errors.email && <span id="email-error" className="error-message">{errors.email}</span>}
               </div>
 
               <div className="form-group">
@@ -124,10 +156,12 @@ export default function Contact({ onBack }) {
                   id="subject"
                   name="subject"
                   value={formData.subject}
-                  onChange={handleChange}
-                  required
+                  onChange={handleChange}                  
                   placeholder="What's this about?"
+                  aria-invalid={!!errors.subject}
+                  aria-describedby={errors.subject ? "subject-error" : undefined}
                 />
+                {errors.subject && <span id="subject-error" className="error-message">{errors.subject}</span>}
               </div>
 
               <div className="form-group">
@@ -136,11 +170,13 @@ export default function Contact({ onBack }) {
                   id="message"
                   name="message"
                   value={formData.message}
-                  onChange={handleChange}
-                  required
+                  onChange={handleChange}                  
                   placeholder="Tell us how we can help you..."
                   rows="5"
+                  aria-invalid={!!errors.message}
+                  aria-describedby={errors.message ? "message-error" : undefined}
                 ></textarea>
+                {errors.message && <span id="message-error" className="error-message">{errors.message}</span>}
               </div>
 
               <button type="submit" className="submit-btn">
