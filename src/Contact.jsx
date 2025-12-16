@@ -1,13 +1,38 @@
 import React, { useState } from 'react'
+import { useTheme } from './context/ThemeContext';
+import './styles/Contact.css';
+
+const contactInfoItems = [
+  {
+    icon: '📧',
+    title: 'Email Support',
+    lines: ['adityasharmapc1@gmail.com', 'We respond within 24 hours'],
+  },
+  {
+    icon: '📞',
+    title: 'Phone Support',
+    lines: ['+91 9814421501', 'Mon-Fri, 9AM-6PM EST'],
+  },
+  {
+    icon: '📍',
+    title: 'Office Address',
+    lines: ['123 Grievance Street', 'Management City, MC 12345'],
+  },
+];
+
+const INITIAL_FORM_STATE = {
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
+};
+
+const SUCCESS_MESSAGE_TIMEOUT = 3000;
 
 export default function Contact({ onBack }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
-  const [submitted, setSubmitted] = useState(false)
+  const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+  const [submitted, setSubmitted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleChange = (e) => {
     setFormData({
@@ -21,22 +46,28 @@ export default function Contact({ onBack }) {
     // In a real app, this would send the data to a backend
     console.log('Contact form submitted:', formData)
     setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 3000)
+    setFormData(INITIAL_FORM_STATE); // Reset form fields
+    setTimeout(() => {
+      setSubmitted(false);
+    }, SUCCESS_MESSAGE_TIMEOUT);
   }
 
   return (
     <div className="contact-page">
-      <div className="contact-background">
-        <div className="contact-orb orb-left"></div>
-        <div className="contact-orb orb-right"></div>
-        <div className="contact-orb orb-center"></div>
-      </div>
-
       <div className="contact-container">
         <div className="contact-header">
-          <button className="back-btn" onClick={onBack}>
-            ← Back to Home
-          </button>
+          <div className="header-top">
+            <button className="back-btn" onClick={onBack}>
+              ← Back to Home
+            </button>
+            <button
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+          </div>
           <h1 className="contact-title">
             <span className="title-highlight">Contact Us</span>
           </h1>
@@ -47,26 +78,15 @@ export default function Contact({ onBack }) {
 
         <div className="contact-content">
           <div className="contact-info">
-            <div className="info-card">
-              <div className="info-icon">📧</div>
-              <h3>Email Support</h3>
-              <p>adityasharmapc1@gmail.com</p>
-              <p>We respond within 24 hours</p>
-            </div>
-
-            <div className="info-card">
-              <div className="info-icon">📞</div>
-              <h3>Phone Support</h3>
-              <p>+91 9814421501</p>
-              <p>Mon-Fri, 9AM-6PM EST</p>
-            </div>
-
-            <div className="info-card">
-              <div className="info-icon">📍</div>
-              <h3>Office Address</h3>
-              <p>123 Grievance Street</p>
-              <p>Management City, MC 12345</p>
-            </div>
+            {contactInfoItems.map((item) => (
+              <div className="info-card" key={item.title}>
+                <div className="info-icon">{item.icon}</div>
+                <h3>{item.title}</h3>
+                {item.lines.map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
+              </div>
+            ))}
           </div>
 
           <div className="contact-form-container">
